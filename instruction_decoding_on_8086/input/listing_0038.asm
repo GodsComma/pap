@@ -21,7 +21,7 @@ mov ch, ah
 mov dx, bx
 mov si, bx
 mov bx, di
-sub al, cl
+mov al, cl
 mov ch, ch
 mov bx, ax
 mov bx, si
