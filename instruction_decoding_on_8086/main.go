@@ -55,6 +55,7 @@ func main() {
 			}
 		}
 		a, b := buffer[0], buffer[1]
+    fmt.Printf("[%b], [%b]\n", a,b)
 		op_code := ""
 		if a & OP_MASK == MOV {
 		 	op_code = "mov" 
