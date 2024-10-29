@@ -1,6 +1,9 @@
 package decoder
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 func Decode_RM_R2R(a, b byte) string {
 	is8bit := a&W_MASK == 0b0
@@ -47,11 +50,12 @@ func Decode_MM_08B(a, b, c byte) string {
 		src = W_REGS[b&REG_MASK>>3]
 	}
 	dest := DX_REG[b&RM_MASK]
+	offset := strconv.Itoa(int(int8(c)))
 
 	if isDest {
-		return fmt.Sprintf("mov %s %d], %s\n", dest, int(c), src)
+		return fmt.Sprintf("mov %s %s], %s\n", dest, offset, src)
 	}
-	return fmt.Sprintf("mov, %s, %s %d]\n", src, dest, int8(c))
+	return fmt.Sprintf("mov, %s, %s %s]\n", src, dest, offset)
 
 }
 
@@ -66,10 +70,11 @@ func Decode_MM_16B(a, b, c, d byte) string {
 		src = W_REGS[b&REG_MASK>>3]
 	}
 	dest := DX_REG[b&RM_MASK]
-
 	data := []byte{c, d}
+	offset := strconv.Itoa(Convert_16bits_to_int(data))
+
 	if isDest {
-		return fmt.Sprintf("mov %s %d], %s\n", dest, Convert_16bits_to_int(data), src)
+		return fmt.Sprintf("mov %s %s], %s\n", dest, offset, src)
 	}
-	return fmt.Sprintf("mov, %s, %s %d]\n", src, dest, Convert_16bits_to_int(data))
+	return fmt.Sprintf("mov, %s, %s %s]\n", src, dest, offset)
 }

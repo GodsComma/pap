@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	file, err := os.Open("./input/listing_0039")
+	file, err := os.Open("./input/listing_0040")
 
 	if err != nil {
 		panic("Error reading file: " + err.Error())
@@ -46,7 +46,6 @@ func main() {
 			} else {
 				fmt.Printf("%s", decoder.Decode_IR_8(a, b))
 			}
-
 		} else if a&decoder.OP_MASK_R2R == decoder.MOV_R2R {
 			if b&decoder.MOD_MASK == decoder.MM_ND0 {
 				if b&decoder.RM_MASK == decoder.D_ADDR {
@@ -64,6 +63,15 @@ func main() {
 				fmt.Printf("%s", decoder.Decode_MM_16B(a, b, buffer_two[0], buffer_two[1]))
 			} else {
 				fmt.Printf("%s", decoder.Decode_RM_R2R(a, b))
+			}
+		} else if a&decoder.OP_MASK_DI2R == decoder.MOV_DI2R {
+			is8bit := a&decoder.W_MASK == 0b0
+			if is8bit {
+				file.Read(buffer_one)
+				fmt.Printf("%s\n", decoder.Decode_IRD_8(a, b, buffer_one[0]))
+			} else {
+				file.Read(buffer_two)
+				fmt.Printf("%s\n", decoder.Decode_IRD_16(a, b, buffer_two[0], buffer_two[1]))
 			}
 		} else {
 			// fmt.Println("Not Immediate to Register")
