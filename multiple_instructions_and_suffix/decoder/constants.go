@@ -4,6 +4,8 @@ package decoder
 const MOV_R2R byte = 0b10001000
 const MOV_I2R byte = 0b10110000
 const MOV_DI2R byte = 0b11000110
+const MOV_M2A byte = 0b10100000
+const MOV_A2M byte = 0b10100010
 
 // Direct Address
 const D_ADDR = 0b00000110

@@ -4,6 +4,7 @@ package decoder
 const OP_MASK_R2R byte = 0b11111100
 const OP_MASK_I2R byte = 0b11110000
 const OP_MASK_DI2R byte = 0b11111110
+const OP_MASK_M2A byte = 0b11111110
 
 // MASK MOVE ARGUMENTS 1st Byte
 const D_MASK byte = 0b00000010
