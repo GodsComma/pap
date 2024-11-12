@@ -3,7 +3,7 @@ bits 16
 ;add bx, [bx+si]
 ;add bx, [bp]
 ;add si, 2
-add bp, 2
+;add bp, 2
 ;add cx, 8
 ;add bx, [bp + 0]
 ;add cx, [bx + 2]
@@ -19,7 +19,7 @@ add bp, 2
 ;add word [bp + si + 1000], 29
 ;add ax, [bp]
 ;add al, [bx + si]
-;add ax, bx
+add ax, bx
 ;add al, ah
 ;add ax, 1000
 ;add al, -30

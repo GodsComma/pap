@@ -4,13 +4,10 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strconv"
-
 	"pap/constants"
 	"pap/decoder"
+	"strconv"
 )
-
-// fmt.Printf("[%08b] [%08b]\n", a, b)
 
 func main() {
 	file, err := os.Open("./input/add")
@@ -38,7 +35,7 @@ func main() {
 		// read the first 2 bytes
 		a, b := buffer_two[0], buffer_two[1]
 		if debug {
-			fmt.Printf("[%b], [%b]\n", a, b)
+			fmt.Printf("[%08b], [%08b]\n", a, b)
 		}
 
 		if a&constants.OP_MASK_I2R == constants.MOV_I2R {
@@ -84,12 +81,12 @@ func main() {
 				if is8bit {
 					file.Read(buffer_two)
 					file.Read(buffer_one)
-					fmt.Printf("%s\n", decoder.Decode_IRD_16_8(a, b, buffer_one[0], buffer_two[0], buffer_one[1]))
+					fmt.Printf("%s\n", decoder.Decode_IRD_16_8("mov", a, b, buffer_one[0], buffer_two[0], buffer_one[1]))
 				} else {
 					file.Read(buffer_two)
 					c, d := buffer_two[0], buffer_two[1]
 					file.Read(buffer_two)
-					fmt.Printf("%s\n", decoder.Decode_IRD_16_16(a, b, c, d, buffer_two[0], buffer_two[1]))
+					fmt.Printf("%s\n", decoder.Decode_IRD_16_16("mov", a, b, c, d, buffer_two[0], buffer_two[1]))
 				}
 			} else if mode_mask == constants.MM_ND0 {
 				is8bit := a&constants.W_MASK == 0b0
@@ -136,20 +133,40 @@ func main() {
 			}
 		} else if a&constants.OP_MASK_ADD_2B == constants.ADD_I2RM {
 			mode := b & constants.MOD_MASK
+			is8bit := a&constants.W_MASK == 0b0
+			isSBit := a&constants.S_MASK == 0b0
 			if mode == constants.MM_RM0 {
-				is8bit := a&constants.W_MASK == 0b0
-				isSBit := a&constants.S_MASK == 0b0
+				// No displacement
 				if isSBit && !is8bit {
 					file.Read(buffer_two)
 					fmt.Printf("%s\n", decoder.Decode_MM_16B("add", a, b, buffer_two[0], buffer_two[1]))
 				} else {
 					file.Read(buffer_one)
+					fmt.Printf("%s\n", decoder.Decode_RR_D8("add", a, b, buffer_one[0]))
+				}
+			} else if mode == constants.MM_ND0 {
+				if isSBit && !is8bit {
+					file.Read(buffer_one)
 					fmt.Printf("%s\n", decoder.Decode_MM_08B("add", a, b, buffer_one[0]))
+				} else {
+					file.Read(buffer_one)
+					fmt.Printf("%s\n", decoder.Decode_D08_D8("add", a, b, buffer_one[0]))
+				}
+			} else if mode == constants.MM_16B {
+				if isSBit && !is8bit {
+					file.Read(buffer_two)
+					c, d := buffer_two[0], buffer_two[1]
+					file.Read(buffer_two)
+					fmt.Printf("%s\n", decoder.Decode_IRD_16_16("add", a, b, c, d, buffer_two[0], buffer_two[1]))
+				} else {
+					file.Read(buffer_two)
+					c, d := buffer_two[0], buffer_two[1]
+					file.Read(buffer_one)
+					fmt.Printf("%s\n", decoder.Decode_IRD_16_8("add", a, b, c, d, buffer_one[0]))
 				}
 			}
 		} else {
-			// fmt.Printf("[%08b] [%08b]\n", a, b)
-			fmt.Printf("-> -> [%08b] [%08b]", a, b)
+			//fmt.Printf("-> -> [%08b] [%08b]", a, b)
 		}
 	}
 }

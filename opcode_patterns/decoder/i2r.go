@@ -37,7 +37,7 @@ func Decode_IRD_8_16(a, b, c, d, e byte) string {
 	return fmt.Sprintf("mov, %s+ %d], %s", reg, displacement, offset)
 }
 
-func Decode_IRD_16_8(a, b, c, d, e byte) string {
+func Decode_IRD_16_8(op string, a, b, c, d, e byte) string {
 	// 16 bit displacement, 8 bit data
 	reg := DX_REG[b&constants.RM_MASK]
 	d_data := []byte{c, d}
@@ -45,7 +45,7 @@ func Decode_IRD_16_8(a, b, c, d, e byte) string {
 	return fmt.Sprintf("mov, %s+ %s], word %d", reg, displacement, int(e))
 }
 
-func Decode_IRD_16_16(a, b, c, d, e, f byte) string {
+func Decode_IRD_16_16(op string, a, b, c, d, e, f byte) string {
 	// 16 bit displacement, 16 bit data
 	reg := DX_REG[b&constants.RM_MASK]
 	d_data := []byte{c, d}
