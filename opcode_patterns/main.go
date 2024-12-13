@@ -6,7 +6,6 @@ import (
 	"os"
 	"pap/constants"
 	"pap/decoder"
-	"strconv"
 )
 
 func main() {
@@ -21,9 +20,6 @@ func main() {
 	buffer_one := make([]byte, 1)
 	buffer_two := make([]byte, 2)
 
-	var debug bool
-	debug, _ = strconv.ParseBool(os.Args[1])
-
 	for {
 		extra, err := file.Read(buffer_two)
 		if err != nil {
@@ -34,10 +30,9 @@ func main() {
 		}
 		// read the first 2 bytes
 		a, b := buffer_two[0], buffer_two[1]
-		if debug {
-			fmt.Printf("[%08b], [%08b]\n", a, b)
-		}
 
+		// Check MOVE OP CODES
+		// WTF DID I DO HERE
 		if a&constants.OP_MASK_I2R == constants.MOV_I2R {
 			// Check for the W bit
 			const w_mask byte = 0b00001000
